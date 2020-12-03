@@ -15,6 +15,9 @@ export default function Canvas() {
     setPers,
     randomQuoteName,
     setMyImage,
+    icons, 
+    iconID,
+    tabIndex
   } = useContext(StateContext);
   const contextRef = useRef(null);
   const canvasRef = useRef(null);
@@ -27,6 +30,7 @@ export default function Canvas() {
   const [startpos, setStartpos] = useState([]);
   const [singleQ, setSingleQ] = useState("");
   const [mouseTouch, setMouseTouch] = useState(true);
+  const [imgIcon, setImgIcon] = useState();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -58,12 +62,18 @@ export default function Canvas() {
         );
         var image = canvasRef.current.toDataURL("image/jpg");
         setMyImage(image);
+        
       }, 2000);
     }
   }, [picID, picdatanew]);
+  
 
   // draw, set a starting point and an end point
+  // need to creat data structure for icons just like drawing
   const startDrawing = ({ nativeEvent }) => {
+    
+    if (tabIndex===3){
+      
     contextRef.current.strokeStyle = grafitiParam.Color;
     contextRef.current.lineWidth = grafitiParam.Width;
     contextRef.current.shadowBlur = 0;
@@ -76,11 +86,13 @@ export default function Canvas() {
     setLined([]);
 
     if (mouseTouch) {
+      
       const { offsetX, offsetY } = nativeEvent;
       const xy = [offsetX, offsetY, LineColor, LineWidth];
       contextRef.current.moveTo(xy[0], xy[1]);
       setStartpos((previous) => [...previous, xy]);
     } else {
+      
       const nn = nativeEvent.targetTouches[0];
       const xy = [
         nn.pageX - nn.target.offsetLeft,
@@ -90,16 +102,40 @@ export default function Canvas() {
       ];
       contextRef.current.moveTo(xy[0], xy[1]);
       setStartpos((previous) => [...previous, xy]);
-    }
+    }} else if(tabIndex===0||tabIndex===1||tabIndex===2) {}
+    else {
+      
+      const imgicon = new Image(); // Create new img element
+      setIsDrawing(true);
+    if(picdatanew.length !==0){
+      //console.log("bat"+tabIndex)
+     imgicon.src = icons[iconID].previewURL;
+     
+     imgicon.setAttribute("crossorigin", "anonymous") 
+     setImgIcon(imgicon)
+     setTimeout(() => {    
+      contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
+    }, 300);
+    
+
+    }}
   };
 
   // folow the cursor and draw
-
+  let zz=0
   const draw = ({ nativeEvent }) => {
+    //console.log("tab"+tabIndex)
     if (!isDrawing) {
+      //console.log("234")
       return;
     }
+    var z = 1
+    if (window.innerWidth<canvassize.Width){
+      z=canvassize.Width/window.innerWidth
+    }else(z=1)
 
+    if (tabIndex===3){
+     
     if (mouseTouch) {
       const { offsetX, offsetY } = nativeEvent;
       contextRef.current.lineTo(offsetX, offsetY);
@@ -112,11 +148,21 @@ export default function Canvas() {
       const offsetY =
         nativeEvent.targetTouches[0].pageY -
         nativeEvent.targetTouches[0].target.offsetTop;
-      contextRef.current.lineTo(offsetX, offsetY);
+      contextRef.current.lineTo(z*offsetX, z*offsetY);
       const fishX = { offsetX, offsetY };
       setLined((gp) => [...gp, fishX]);
     }
-    contextRef.current.stroke();
+    contextRef.current.stroke();}
+    else if(tabIndex===0||tabIndex===1||tabIndex===2) {}
+    else {
+      zz=zz+1
+      const { offsetX, offsetY } = nativeEvent;
+      //console.log("123")
+      if(zz%5===0){
+      drawforrandom();
+      contextRef.current.drawImage(imgIcon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
+      }
+    }
   };
 
   //finish the drawing process and construct the data Array
@@ -274,6 +320,7 @@ export default function Canvas() {
 
   // put the generated text on the canvas
   function drawforrandom(singleq) {
+    console.log(singleQ)
     if (picturedata !== undefined || singleQ !== "") {
       contextRef.current.font =
         "bold " + textParam.fontSize + "px " + textParam.font;

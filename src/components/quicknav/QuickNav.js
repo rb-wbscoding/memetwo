@@ -13,13 +13,23 @@ function HideAndShowDivOnClick() {
     textParam,
     setTextParam,
     myImage,
+    setTabIndex,
+    icons, 
+    setIconID
   } = useContext(StateContext);
   const [showDiv, setShowDiv] = useState(false);
   const [chips, setChips] = useState();
+  const [fish, setFish] = useState()
 
   function getInfo(e) {
     setPicID(e.target.id);
   }
+
+  function IconID(e){
+    setIconID(e.target.id)
+  
+  }
+
 
   useEffect(() => {
     if (picdatanew !== undefined) {
@@ -39,6 +49,15 @@ function HideAndShowDivOnClick() {
     }
   }, [picdatanew]);
 
+  useEffect(()=>{
+    if(icons!==undefined){
+      setFish(icons.map((v, i) => (
+            <img key={i} id={i} onClick={IconID} onTouchStart={IconID} type="image" src={v.previewURL} alt="choose donald" className={Styles.quicklistPic}/>
+      ))) }}, [icons])
+
+
+
+
   return (
     <div className={Styles.quicklistContainer}>
       <button
@@ -51,14 +70,17 @@ function HideAndShowDivOnClick() {
       <a download="meme.jpg" href={myImage}>
         <button className={Styles.downloadBtn}>Download</button>
       </a>
+      <button className={Styles.downloadBtn}>Clear Last</button>
+      <button className={Styles.downloadBtn}>Clear All</button>
 
       {showDiv && (
-        <Tabs className={Styles.tabs}>
+        <Tabs className={Styles.tabs} defaultIndex={0} onSelect={index=>setTabIndex(index)}>
           <TabList>
             <Tab>Donald</Tab>
             <Tab>Text</Tab>
             <Tab>Font</Tab>
             <Tab>Graffiti</Tab>
+            <Tab >Icons</Tab>
           </TabList>
 
           <TabPanel>
@@ -269,6 +291,12 @@ function HideAndShowDivOnClick() {
                 <label>Grafiti WIDTH: {grafitiParam.Width}</label>
               </div>
             </div>
+          </TabPanel>
+          <TabPanel>
+              <ul className="quicklist-content">
+                 {fish}    
+                </ul>
+
           </TabPanel>
         </Tabs>
       )}

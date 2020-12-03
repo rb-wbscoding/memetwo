@@ -23,6 +23,22 @@ export default function StateContextProvider({ children }) {
   });
   const [textInput, setTextInput] = useState({ toptext: "", bottomtext: "" });
   const [myImage, setMyImage] = useState();
+  const [tabIndex, setTabIndex] = useState(0);
+  const [icons, setIcons]=useState([]);
+  const [iconID, setIconID]=useState(0);
+
+ //Get icons
+ useEffect(() => {
+  fetch("https://pixabay.com/api/?key=17706064-dbf47c15f3ffee1df9f90dd47&q=emoji&image_type=vector&per_page=200")
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (rep) {
+      const memes = rep.hits;
+      setIcons(memes);
+    });
+}, []);  
+
 
   useEffect(() => {
     fetch(
@@ -68,6 +84,11 @@ export default function StateContextProvider({ children }) {
         setRandomQuoteName,
         myImage,
         setMyImage,
+        tabIndex, 
+        setTabIndex, 
+        iconID, 
+        setIconID,
+        icons
       }}
     >
       {children}
