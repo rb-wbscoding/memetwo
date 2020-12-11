@@ -73,7 +73,7 @@ function HideAndShowDivOnClick() {
         <button className={Styles.downloadBtn}>Download</button>
       </a>
       <button className={Styles.downloadBtn} onClick={setClearLast(true)}>Clear Last</button>
-      <button className={Styles.downloadBtn} onClick={setClearAll(true)}>Clear All</button>
+      <button className={Styles.downloadBtn} onClick={()=>{setClearAll(true); setTimeout(()=>{setClearAll(false)}, 100)}}>Clear All</button>
 
       {showDiv && (
         <Tabs className={Styles.tabs} defaultIndex={0} onSelect={index=>setTabIndex(index)}>

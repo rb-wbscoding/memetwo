@@ -69,8 +69,10 @@ export default function Canvas() {
         
       }, 2000);
     }
-  }, [picID, picdatanew]);
-  
+   
+    //setClearAll(false)
+  }, [picID, picdatanew, clearAll]);
+   //console.log(clearAll)
 
   // draw, set a starting point and an end point
   // need to creat data structure for icons just like drawing
@@ -202,30 +204,7 @@ export default function Canvas() {
 
       drawagainline();
 
-      function drawagainline() {
-        contextRef.current.shadowBlur = 0;
-        var z;
-        for (z = 0; z < wholedata.length; z++) {
-          contextRef.current.lineWidth = wholedata[z].movT[0][3];
-          contextRef.current.strokeStyle = wholedata[z].movT[0][2];
-          contextRef.current.lineCap = "round";
-          contextRef.current.beginPath();
-
-          var i;
-          contextRef.current.moveTo(
-            wholedata[z].movT[0][0],
-            wholedata[z].movT[0][1]
-          );
-
-          for (i = 0; i < wholedata[z].lineT.length; i++) {
-            contextRef.current.lineTo(
-              wholedata[z].lineT[i].offsetX,
-              wholedata[z].lineT[i].offsetY
-            );
-            contextRef.current.stroke();
-          }
-        }
-      }
+      
 
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
@@ -311,35 +290,8 @@ export default function Canvas() {
       );
       contextRef.current.drawImage(picturedata, 0, 0);
 
-      drawagain();
-      function drawagain() {
-        contextRef.current.shadowBlur = 0;
-        contextRef.current.lineWidth = 10;
-        if (wholedata.length !== 0) {
-          var z;
-          for (z = 0; z < wholedata.length; z++) {
-            contextRef.current.lineWidth = wholedata[z].movT[0][3];
-            contextRef.current.strokeStyle = wholedata[z].movT[0][2];
-            contextRef.current.lineCap = "round";
-
-            contextRef.current.beginPath();
-
-            var i;
-            contextRef.current.moveTo(
-              wholedata[z].movT[0][0],
-              wholedata[z].movT[0][1]
-            );
-
-            for (i = 0; i < wholedata[z].lineT.length; i++) {
-              contextRef.current.lineTo(
-                wholedata[z].lineT[i].offsetX,
-                wholedata[z].lineT[i].offsetY
-              );
-            }
-            contextRef.current.stroke();
-          }
-        }
-      }
+      drawagainline();
+    
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
@@ -367,6 +319,35 @@ export default function Canvas() {
 
       var image = canvasRef.current.toDataURL("image/jpg");
       setMyImage(image);
+    }
+  }
+
+  function drawagainline() {
+    contextRef.current.shadowBlur = 0;
+    contextRef.current.lineWidth = 10;
+    if (wholedata.length !== 0) {
+      var z;
+      for (z = 0; z < wholedata.length; z++) {
+        contextRef.current.lineWidth = wholedata[z].movT[0][3];
+        contextRef.current.strokeStyle = wholedata[z].movT[0][2];
+        contextRef.current.lineCap = "round";
+
+        contextRef.current.beginPath();
+
+        var i;
+        contextRef.current.moveTo(
+          wholedata[z].movT[0][0],
+          wholedata[z].movT[0][1]
+        );
+
+        for (i = 0; i < wholedata[z].lineT.length; i++) {
+          contextRef.current.lineTo(
+            wholedata[z].lineT[i].offsetX,
+            wholedata[z].lineT[i].offsetY
+          );
+        }
+        contextRef.current.stroke();
+      }
     }
   }
 
