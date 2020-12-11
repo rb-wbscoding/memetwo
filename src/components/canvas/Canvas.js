@@ -17,7 +17,11 @@ export default function Canvas() {
     setMyImage,
     icons, 
     iconID,
-    tabIndex
+    tabIndex,
+    setClearAll,
+    clearAll,
+    setClearLast,
+    clearLast
   } = useContext(StateContext);
   const contextRef = useRef(null);
   const canvasRef = useRef(null);
@@ -65,8 +69,10 @@ export default function Canvas() {
         
       }, 2000);
     }
-  }, [picID, picdatanew]);
-  
+   
+    //setClearAll(false)
+  }, [picID, picdatanew, clearAll]);
+   //console.log(clearAll)
 
   // draw, set a starting point and an end point
   // need to creat data structure for icons just like drawing
@@ -198,88 +204,36 @@ export default function Canvas() {
 
       drawagainline();
 
-      function drawagainline() {
-        contextRef.current.shadowBlur = 0;
-        var z;
-        for (z = 0; z < wholedata.length; z++) {
-          contextRef.current.lineWidth = wholedata[z].movT[0][3];
-          contextRef.current.strokeStyle = wholedata[z].movT[0][2];
-          contextRef.current.lineCap = "round";
-          contextRef.current.beginPath();
-
-          var i;
-          contextRef.current.moveTo(
-            wholedata[z].movT[0][0],
-            wholedata[z].movT[0][1]
-          );
-
-          for (i = 0; i < wholedata[z].lineT.length; i++) {
-            contextRef.current.lineTo(
-              wholedata[z].lineT[i].offsetX,
-              wholedata[z].lineT[i].offsetY
-            );
-            contextRef.current.stroke();
-          }
-        }
-      }
+      
 
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
-      contextRef.current.fillText(
-        textInput.toptext,
-        starttop + 6,
-        50 + 6,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.bottomtext,
-        startbottom + 6,
-        canvassize.height - 44,
-        canvassize.width - 30
-      );
+      fillTexts(textInput.toptext, starttop + 6, 50 + 6);
+
+      fillTexts(textInput.bottomtext, startbottom + 6, canvassize.height - 44);
+
       contextRef.current.fillStyle = textParam.threeDColor;
-      contextRef.current.fillText(
-        textInput.toptext,
-        starttop + 4,
-        50 + 4,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.toptext,
-        starttop + 2,
-        50 + 2,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.bottomtext,
-        startbottom + 4,
-        canvassize.height - 46,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.bottomtext,
-        startbottom + 2,
-        canvassize.height - 48,
-        canvassize.width - 30
-      );
+      fillTexts(textInput.toptext, starttop + 4, 50 + 4);
+
+      fillTexts(textInput.toptext, starttop + 2, 50 + 2);
+
+      fillTexts(textInput.bottomtext, startbottom + 4, canvassize.height - 46);
+
+      fillTexts(textInput.bottomtext, startbottom + 2, canvassize.height - 48);
+
       contextRef.current.fillStyle = textParam.textColor;
-      contextRef.current.fillText(
-        textInput.toptext,
-        starttop,
-        50,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.bottomtext,
-        startbottom,
-        canvassize.height - 50,
-        canvassize.width - 30
-      );
+      fillTexts(textInput.toptext, starttop, 50);
+
+      fillTexts(textInput.bottomtext, startbottom, canvassize.height - 50)
     }
     var image = canvasRef.current.toDataURL("image/jpg");
     setMyImage(image);
   }, [textInput, textParam]);
+
+  function fillTexts(e, f, g){
+    contextRef.current.fillText(e,f,g,canvassize.width - 30);
+  }
 
   //generate the random text
   useEffect(() => {
@@ -336,68 +290,64 @@ export default function Canvas() {
       );
       contextRef.current.drawImage(picturedata, 0, 0);
 
-      drawagain();
-      function drawagain() {
-        contextRef.current.shadowBlur = 0;
-        contextRef.current.lineWidth = 10;
-        if (wholedata.length !== 0) {
-          var z;
-          for (z = 0; z < wholedata.length; z++) {
-            contextRef.current.lineWidth = wholedata[z].movT[0][3];
-            contextRef.current.strokeStyle = wholedata[z].movT[0][2];
-            contextRef.current.lineCap = "round";
-
-            contextRef.current.beginPath();
-
-            var i;
-            contextRef.current.moveTo(
-              wholedata[z].movT[0][0],
-              wholedata[z].movT[0][1]
-            );
-
-            for (i = 0; i < wholedata[z].lineT.length; i++) {
-              contextRef.current.lineTo(
-                wholedata[z].lineT[i].offsetX,
-                wholedata[z].lineT[i].offsetY
-              );
-            }
-            contextRef.current.stroke();
-          }
-        }
-      }
+      drawagainline();
+    
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
-      contextRef.current.fillText(
+      fillTexts(
         randomQuoteName + " " + singleq,
         start + 6,
-        starth + 6,
-        canvassize.width - 30
-      );
+        starth + 6);
+
       contextRef.current.fillStyle = textParam.threeDColor;
-      contextRef.current.fillText(
+      fillTexts(
         randomQuoteName + " " + singleq,
         start + 4,
-        starth + 4,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
+        starth + 4);
+
+      fillTexts(
         randomQuoteName + " " + singleq,
         start + 2,
-        starth + 2,
-        canvassize.width - 30
-      );
+        starth + 2);
 
       contextRef.current.fillStyle = textParam.textColor;
-      contextRef.current.fillText(
+      fillTexts(
         randomQuoteName + " " + singleq,
         start,
-        starth,
-        canvassize.width - 30
-      );
+        starth);
 
       var image = canvasRef.current.toDataURL("image/jpg");
       setMyImage(image);
+    }
+  }
+
+  function drawagainline() {
+    contextRef.current.shadowBlur = 0;
+    contextRef.current.lineWidth = 10;
+    if (wholedata.length !== 0) {
+      var z;
+      for (z = 0; z < wholedata.length; z++) {
+        contextRef.current.lineWidth = wholedata[z].movT[0][3];
+        contextRef.current.strokeStyle = wholedata[z].movT[0][2];
+        contextRef.current.lineCap = "round";
+
+        contextRef.current.beginPath();
+
+        var i;
+        contextRef.current.moveTo(
+          wholedata[z].movT[0][0],
+          wholedata[z].movT[0][1]
+        );
+
+        for (i = 0; i < wholedata[z].lineT.length; i++) {
+          contextRef.current.lineTo(
+            wholedata[z].lineT[i].offsetX,
+            wholedata[z].lineT[i].offsetY
+          );
+        }
+        contextRef.current.stroke();
+      }
     }
   }
 
