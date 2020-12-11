@@ -15,7 +15,9 @@ function HideAndShowDivOnClick() {
     myImage,
     setTabIndex,
     icons, 
-    setIconID
+    setIconID,
+    setClearAll,
+    setClearLast
   } = useContext(StateContext);
   const [showDiv, setShowDiv] = useState(false);
   const [chips, setChips] = useState();
@@ -70,8 +72,8 @@ function HideAndShowDivOnClick() {
       <a download="meme.jpg" href={myImage}>
         <button className={Styles.downloadBtn}>Download</button>
       </a>
-      <button className={Styles.downloadBtn}>Clear Last</button>
-      <button className={Styles.downloadBtn}>Clear All</button>
+      <button className={Styles.downloadBtn} onClick={setClearLast(true)}>Clear Last</button>
+      <button className={Styles.downloadBtn} onClick={setClearAll(true)}>Clear All</button>
 
       {showDiv && (
         <Tabs className={Styles.tabs} defaultIndex={0} onSelect={index=>setTabIndex(index)}>

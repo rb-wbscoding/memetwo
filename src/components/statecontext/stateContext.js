@@ -26,6 +26,8 @@ export default function StateContextProvider({ children }) {
   const [tabIndex, setTabIndex] = useState(0);
   const [icons, setIcons]=useState([]);
   const [iconID, setIconID]=useState(0);
+  const [clearAll, setClearAll]=useState(false)
+  const [clearLast, setClearLast]= useState(false)
 
  //Get icons
  useEffect(() => {
@@ -88,7 +90,11 @@ export default function StateContextProvider({ children }) {
         setTabIndex, 
         iconID, 
         setIconID,
-        icons
+        icons,
+        setClearAll,
+        clearAll,
+        setClearLast,
+        clearLast
       }}
     >
       {children}

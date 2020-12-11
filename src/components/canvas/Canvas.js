@@ -17,7 +17,11 @@ export default function Canvas() {
     setMyImage,
     icons, 
     iconID,
-    tabIndex
+    tabIndex,
+    setClearAll,
+    clearAll,
+    setClearLast,
+    clearLast
   } = useContext(StateContext);
   const contextRef = useRef(null);
   const canvasRef = useRef(null);
@@ -226,60 +230,31 @@ export default function Canvas() {
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
-      contextRef.current.fillText(
-        textInput.toptext,
-        starttop + 6,
-        50 + 6,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.bottomtext,
-        startbottom + 6,
-        canvassize.height - 44,
-        canvassize.width - 30
-      );
+      fillTexts(textInput.toptext, starttop + 6, 50 + 6);
+
+      fillTexts(textInput.bottomtext, startbottom + 6, canvassize.height - 44);
+
       contextRef.current.fillStyle = textParam.threeDColor;
-      contextRef.current.fillText(
-        textInput.toptext,
-        starttop + 4,
-        50 + 4,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.toptext,
-        starttop + 2,
-        50 + 2,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.bottomtext,
-        startbottom + 4,
-        canvassize.height - 46,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.bottomtext,
-        startbottom + 2,
-        canvassize.height - 48,
-        canvassize.width - 30
-      );
+      fillTexts(textInput.toptext, starttop + 4, 50 + 4);
+
+      fillTexts(textInput.toptext, starttop + 2, 50 + 2);
+
+      fillTexts(textInput.bottomtext, startbottom + 4, canvassize.height - 46);
+
+      fillTexts(textInput.bottomtext, startbottom + 2, canvassize.height - 48);
+
       contextRef.current.fillStyle = textParam.textColor;
-      contextRef.current.fillText(
-        textInput.toptext,
-        starttop,
-        50,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
-        textInput.bottomtext,
-        startbottom,
-        canvassize.height - 50,
-        canvassize.width - 30
-      );
+      fillTexts(textInput.toptext, starttop, 50);
+
+      fillTexts(textInput.bottomtext, startbottom, canvassize.height - 50)
     }
     var image = canvasRef.current.toDataURL("image/jpg");
     setMyImage(image);
   }, [textInput, textParam]);
+
+  function fillTexts(e, f, g){
+    contextRef.current.fillText(e,f,g,canvassize.width - 30);
+  }
 
   //generate the random text
   useEffect(() => {
@@ -368,33 +343,27 @@ export default function Canvas() {
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
-      contextRef.current.fillText(
+      fillTexts(
         randomQuoteName + " " + singleq,
         start + 6,
-        starth + 6,
-        canvassize.width - 30
-      );
+        starth + 6);
+
       contextRef.current.fillStyle = textParam.threeDColor;
-      contextRef.current.fillText(
+      fillTexts(
         randomQuoteName + " " + singleq,
         start + 4,
-        starth + 4,
-        canvassize.width - 30
-      );
-      contextRef.current.fillText(
+        starth + 4);
+
+      fillTexts(
         randomQuoteName + " " + singleq,
         start + 2,
-        starth + 2,
-        canvassize.width - 30
-      );
+        starth + 2);
 
       contextRef.current.fillStyle = textParam.textColor;
-      contextRef.current.fillText(
+      fillTexts(
         randomQuoteName + " " + singleq,
         start,
-        starth,
-        canvassize.width - 30
-      );
+        starth);
 
       var image = canvasRef.current.toDataURL("image/jpg");
       setMyImage(image);
