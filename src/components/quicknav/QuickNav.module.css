@@ -105,6 +105,8 @@
 .fontContainer {
   display: flex;
   justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   line-height: 1em;
   cursor: pointer;
@@ -113,25 +115,8 @@
 }
 
 .wrapper1 {
-  display: flex;
-  flex-direction: column;
   margin: 0;
   padding: 0;
-}
-
-.wrapper2 {
-  display: flex;
-  flex-direction: column;
-}
-
-.wrapper3 {
-  display: flex;
-  flex-direction: column;
-}
-
-.wrapper4 {
-  display: flex;
-  flex-direction: column;
 }
 
 .indieFlower:hover {
@@ -262,16 +247,6 @@
     width: 50px;
   }
   .wrapper1 {
-    padding: 0 4px;
-  }
-  .wrapper2 {
-    padding: 0 4px;
-  }
-
-  .wrapper3 {
-    padding: 0 4px;
-  }
-  .wrapper4 {
     padding: 0 4px;
   }
 }

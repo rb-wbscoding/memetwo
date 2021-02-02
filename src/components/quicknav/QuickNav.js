@@ -160,12 +160,11 @@ function HideAndShowDivOnClick() {
           <TabPanel>
             <div className={Styles.fontContainer}>
                 {availablefonts.map((ent, idq)=>
-                <div className={Styles.wrapper1}>
-                  <p key={idq} className={Styles.psize}
+                <p key={idq} className={Styles.wrapper1}             
                     onClick={() =>setTextParam({ ...textParam, font: ent[0] })}
                     className={ent[1]}
-                    > {ent[0]}</p>
-                </div>)}
+                    >{ent[0]}
+                </p>)}
             </div>
           </TabPanel>
           <TabPanel>

@@ -47,8 +47,8 @@ export default function Canvas() {
   useEffect(() => {
     const img = new Image();
     if (picdatanew.length !== 0) {
-      img.src = picdatanew[picID].webformatURL;
       img.setAttribute("crossorigin", "anonymous");
+      img.src = picdatanew[picID].webformatURL;
       setCanvasSize({
         width: picdatanew[picID].webformatWidth,
         height: picdatanew[picID].webformatHeight,
@@ -57,7 +57,7 @@ export default function Canvas() {
       setWholedata([]);
 
       setTimeout(() => {
-        contextRef.current.drawImage(
+         contextRef.current.drawImage(
           img,
           0,
           0,
