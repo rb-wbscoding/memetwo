@@ -47,8 +47,8 @@ export default function Canvas() {
   useEffect(() => {
     const img = new Image();
     if (picdatanew.length !== 0) {
-      img.src = picdatanew[picID].webformatURL;
       img.setAttribute("crossorigin", "anonymous");
+      img.src = picdatanew[picID].webformatURL;
       setCanvasSize({
         width: picdatanew[picID].webformatWidth,
         height: picdatanew[picID].webformatHeight,
@@ -57,7 +57,7 @@ export default function Canvas() {
       setWholedata([]);
 
       setTimeout(() => {
-        contextRef.current.drawImage(
+         contextRef.current.drawImage(
           img,
           0,
           0,
@@ -71,7 +71,7 @@ export default function Canvas() {
     }
    
     //setClearAll(false)
-  }, [picID, picdatanew, clearAll]);
+  }, [picID, picdatanew]);
    //console.log(clearAll)
 
   // draw, set a starting point and an end point
@@ -202,6 +202,7 @@ export default function Canvas() {
       );
       contextRef.current.drawImage(picturedata, 0, 0);
 
+      if(clearAll===false){
       drawagainline();
 
       
@@ -227,9 +228,16 @@ export default function Canvas() {
 
       fillTexts(textInput.bottomtext, startbottom, canvassize.height - 50)
     }
+    else if(clearAll===true){
+      setWholedata([]);
+      setStartpos([]);
+      setLined([]);
+      setTextInput({ toptext: "", bottomtext: "" })
+    }
+  }
     var image = canvasRef.current.toDataURL("image/jpg");
     setMyImage(image);
-  }, [textInput, textParam]);
+  }, [textInput, textParam, clearAll]);
 
   function fillTexts(e, f, g){
     contextRef.current.fillText(e,f,g,canvassize.width - 30);
