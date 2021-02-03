@@ -56,18 +56,16 @@ export default function Canvas() {
       setPicturedata(img);
       setWholedata([]);
 
-      setTimeout(() => {
+      img.addEventListener('load', ()=>
          contextRef.current.drawImage(
           img,
           0,
           0,
           picdatanew[picID].webformatWidth,
           picdatanew[picID].webformatHeight
-        );
+        ));
         var image = canvasRef.current.toDataURL("image/jpg");
         setMyImage(image);
-        
-      }, 2000);
     }
    
     //setClearAll(false)
@@ -119,9 +117,9 @@ export default function Canvas() {
      
      imgicon.setAttribute("crossorigin", "anonymous") 
      setImgIcon(imgicon)
-     setTimeout(() => {    
+     imgicon.addEventListener('load',() => {    
       contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
-    }, 300);
+    });
     
 
     }}
