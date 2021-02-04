@@ -56,7 +56,7 @@ export default function Canvas() {
       setPicturedata(img);
       setWholedata([]);
 
-      setTimeout(() => {
+      img.addEventListener('load', () => {
          contextRef.current.drawImage(
           img,
           0,
@@ -65,9 +65,8 @@ export default function Canvas() {
           picdatanew[picID].webformatHeight
         );
         var image = canvasRef.current.toDataURL("image/jpg");
-        setMyImage(image);
-        
-      }, 2000);
+        setMyImage(image);  
+      });
     }
    
     //setClearAll(false)
@@ -119,9 +118,9 @@ export default function Canvas() {
      
      imgicon.setAttribute("crossorigin", "anonymous") 
      setImgIcon(imgicon)
-     setTimeout(() => {    
+     imgicon.addEventListener('load', () => {    
       contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
-    }, 300);
+    });
     
 
     }}
@@ -359,34 +358,27 @@ export default function Canvas() {
     }
   }
 
+  //Mouse or touch control
+  function mouseTT(e, zz, nn){
+      if(nn){      
+        startDrawing(e)}
+      else{finishDrawing(e)};
+      document.getElementsByTagName("body")[0].style = "overflow: visible";
+      setMouseTouch(zz);
+  }
+
   return (
     <div className={Styles.canvasContainer}>
       <canvas
         ref={canvasRef}
-        onMouseDown={(e) => {
-          startDrawing(e);
-          document.getElementsByTagName("body")[0].style = "overflow: visible";
-          setMouseTouch(true);
-        }}
-        onMouseUp={(e) => {
-          finishDrawing(e);
-          document.getElementsByTagName("body")[0].style = "overflow: visible";
-          setMouseTouch(true);
-        }}
+        onMouseDown={(e)=>mouseTT(e, true, true)}
+        onMouseUp={(e)=>mouseTT(e, true, false)}
         onMouseMove={(e) => {
           draw(e);
           setMouseTouch(true);
         }}
-        onTouchStart={(e) => {
-          startDrawing(e);
-          document.getElementsByTagName("body")[0].style = "overflow: hidden";
-          setMouseTouch(false);
-        }}
-        onTouchEnd={(e) => {
-          finishDrawing(e);
-          document.getElementsByTagName("body")[0].style = "overflow: visible";
-          setMouseTouch(false);
-        }}
+        onTouchStart={(e)=>mouseTT(e, false, true)}
+        onTouchEnd={(e)=>mouseTT(e, false, false) }
         onTouchMove={(e) => {
           draw(e);
           setMouseTouch(false);
