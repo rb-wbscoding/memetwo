@@ -27,12 +27,12 @@ function HideAndShowDivOnClick() {
                 ["VT323", Styles.vt323], ["Wallpoet", Styles.wallpoet], ["Bebas Neue", Styles.bebasNeue], ["Monoton", Styles.monoton], ["Bangers", Styles.bangers], ["Piedra", Styles.piedra], 
                 ["Fredericka the Great", Styles.frederickaTheGreat], ["Homemade Apple", Styles.homemadeApple], ["Vast Shadow", Styles.vastShadow]]
 
-  function getInfo(e) {
-    setPicID(e.target.id);
-  }
+  //function getInfo(e) {
+    //setPicID(e.target.id);
+  //}
 
   function IconID(e){
-    setIconID(e.target.id)
+    setIconID(e.target.src)
   
   }
 
@@ -44,7 +44,7 @@ function HideAndShowDivOnClick() {
           <img
             key={i}
             id={i}
-            onClick={getInfo}
+            onClick={(e)=>setPicID(e.target.id)}
             type="image"
             src={v.previewURL}
             alt="choice image"

@@ -90,36 +90,39 @@ export default function Canvas() {
     setStartpos([]);
     setLined([]);
 
-    if (mouseTouch) {
+      if (mouseTouch) {
       
-      const { offsetX, offsetY } = nativeEvent;
-      const xy = [offsetX, offsetY, LineColor, LineWidth];
-      contextRef.current.moveTo(xy[0], xy[1]);
+        const { offsetX, offsetY } = nativeEvent;
+        const xy = [offsetX, offsetY, LineColor, LineWidth];
+          contextRef.current.moveTo(xy[0], xy[1]);
       setStartpos((previous) => [...previous, xy]);
-    } else {
+      } else {
       
-      const nn = nativeEvent.targetTouches[0];
-      const xy = [
-        nn.pageX - nn.target.offsetLeft,
-        nn.pageY - nn.target.offsetTop,
-        LineColor,
-        LineWidth,
-      ];
-      contextRef.current.moveTo(xy[0], xy[1]);
-      setStartpos((previous) => [...previous, xy]);
+        const nn = nativeEvent.targetTouches[0];
+        const xy = [
+          nn.pageX - nn.target.offsetLeft,
+          nn.pageY - nn.target.offsetTop,
+          LineColor,
+          LineWidth,
+        ];
+        contextRef.current.moveTo(xy[0], xy[1]);
+        setStartpos((previous) => [...previous, xy]);
     }} else if(tabIndex===0||tabIndex===1||tabIndex===2) {}
     else {
       
       const imgicon = new Image(); // Create new img element
       setIsDrawing(true);
-    if(picdatanew.length !==0){
+      if(picdatanew.length !==0){
       //console.log("bat"+tabIndex)
-     imgicon.src = icons[iconID].previewURL;
+      console.log(iconID)
+      imgicon.crossOrigin="anonymous";
+      //imgicon.setAttribute("crossorigin", "anonymous");
+      imgicon.src = iconID;
      
-     imgicon.setAttribute("crossorigin", "anonymous") 
-     setImgIcon(imgicon)
-     imgicon.addEventListener('load', () => {    
-      contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
+       
+      setImgIcon(imgicon)
+      imgicon.addEventListener('load', () => {    
+        contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
     });
     
 
@@ -360,9 +363,10 @@ export default function Canvas() {
 
   //Mouse or touch control
   function mouseTT(e, zz, nn){
-      if(nn){      
-        startDrawing(e)}
-      else{finishDrawing(e)};
+      nn?startDrawing(e):finishDrawing(e)
+      //if(nn){      
+        //startDrawing(e)}
+      //else{finishDrawing(e)};
       document.getElementsByTagName("body")[0].style = "overflow: visible";
       setMouseTouch(zz);
   }
