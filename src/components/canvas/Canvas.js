@@ -36,6 +36,7 @@ export default function Canvas() {
   const [mouseTouch, setMouseTouch] = useState(true);
   const [imgIcon, setImgIcon] = useState();
 
+  //set up canvas and reference
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -46,7 +47,7 @@ export default function Canvas() {
   //show the selected picture
   useEffect(() => {
     const img = new Image();
-    if (picdatanew.length !== 0) {
+    if (picdatanew.length) {
       img.setAttribute("crossorigin", "anonymous");
       img.src = picdatanew[picID].webformatURL;
       setCanvasSize({
@@ -112,9 +113,9 @@ export default function Canvas() {
       
       const imgicon = new Image(); // Create new img element
       setIsDrawing(true);
-      if(picdatanew.length !==0){
+      if(picdatanew.length){
       //console.log("bat"+tabIndex)
-      console.log(iconID)
+      //console.log(iconID)
       imgicon.crossOrigin="anonymous";
       //imgicon.setAttribute("crossorigin", "anonymous");
       imgicon.src = iconID;
@@ -207,8 +208,6 @@ export default function Canvas() {
       if(clearAll===false){
       drawagainline();
 
-      
-
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
@@ -247,9 +246,7 @@ export default function Canvas() {
 
   //generate the random text
   useEffect(() => {
-    if (quotenew.length !== 0) {
-      retry();
-    }
+    Object.keys(quotenew).length&&retry()
 
     function retry() {
       const lengt = quotenew.messages.personalized.length;
@@ -284,7 +281,7 @@ export default function Canvas() {
 
   // put the generated text on the canvas
   function drawforrandom(singleq) {
-    console.log(singleQ)
+    //console.log(singleQ)
     if (picturedata !== undefined || singleQ !== "") {
       contextRef.current.font =
         "bold " + textParam.fontSize + "px " + textParam.font;
@@ -335,7 +332,7 @@ export default function Canvas() {
   function drawagainline() {
     contextRef.current.shadowBlur = 0;
     contextRef.current.lineWidth = 10;
-    if (wholedata.length !== 0) {
+    if (wholedata.length) {
       var z;
       for (z = 0; z < wholedata.length; z++) {
         contextRef.current.lineWidth = wholedata[z].movT[0][3];
