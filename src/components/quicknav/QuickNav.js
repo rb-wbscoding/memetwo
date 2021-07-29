@@ -86,7 +86,7 @@ function HideAndShowDivOnClick() {
             <Tab>Text</Tab>
             <Tab>Font</Tab>
             <Tab>Graffiti</Tab>
-            <Tab >Icons</Tab>
+            <Tab>Icons</Tab>
           </TabList>
 
           <TabPanel>

@@ -9,7 +9,7 @@ export default function Header() {
   useEffect(() => {
     singlequote();
     function singlequote() {
-      if (quotenew.length !== 0) {
+      if (quotenew.length) {
         const long = quotenew.messages.non_personalized.length - 1;
         const randomnume = Math.floor(Math.random() * long);
         setSingquote(quotenew.messages.non_personalized[randomnume]);
