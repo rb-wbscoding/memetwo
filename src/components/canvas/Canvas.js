@@ -110,33 +110,23 @@ export default function Canvas() {
         setStartpos((previous) => [...previous, xy]);
     }} else if(tabIndex===0||tabIndex===1||tabIndex===2) {}
     else {
-      
       const imgicon = new Image(); // Create new img element
       setIsDrawing(true);
       
       if(picdatanew.length){
-      //console.log("bat"+tabIndex)
-      //console.log(iconID)
-      imgicon.crossOrigin="anonymous";
-      //imgicon.setAttribute("crossorigin", "anonymous");
-      imgicon.src = iconID;
-     
-       
-      setImgIcon(imgicon)
-      imgicon.addEventListener('load', () => {    
-        contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
-    });
-    
-
-    }}
+        imgicon.crossOrigin="anonymous";
+        imgicon.src = iconID;
+        setImgIcon(imgicon)
+        imgicon.addEventListener('load', () => {    
+          contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
+        });
+      }}
   };
 
   // folow the cursor and draw
   let zz=0
   const draw = ({ nativeEvent }) => {
-    //console.log("tab"+tabIndex)
     if (!isDrawing) {
-      //console.log("234")
       return;
     }
     var z = 1
@@ -171,8 +161,7 @@ export default function Canvas() {
       if(zz%5===0){
         //if(randomQuoteName){
         drawforrandom();
-        //}
-        
+        //}        
         contextRef.current.drawImage(imgIcon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
       }
     }
@@ -211,27 +200,18 @@ export default function Canvas() {
 
       if(clearAll===false){
       drawagainline();
-      console.log("1234")
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
-      fillTexts(textInput.toptext, starttop + 6, 50 + 6);
-
-      fillTexts(textInput.bottomtext, startbottom + 6, canvassize.height - 44);
-
-      contextRef.current.fillStyle = textParam.threeDColor;
-      fillTexts(textInput.toptext, starttop + 4, 50 + 4);
-
-      fillTexts(textInput.toptext, starttop + 2, 50 + 2);
-
-      fillTexts(textInput.bottomtext, startbottom + 4, canvassize.height - 46);
-
-      fillTexts(textInput.bottomtext, startbottom + 2, canvassize.height - 48);
-
-      contextRef.current.fillStyle = textParam.textColor;
-      fillTexts(textInput.toptext, starttop, 50);
-
-      fillTexts(textInput.bottomtext, startbottom, canvassize.height - 50)
+      for (var i =0;i<4;i++){
+        fillTexts(textInput.toptext, starttop + (6-2*i), 50 + (6-2*i));
+        fillTexts(textInput.bottomtext, startbottom + (6-2*i), canvassize.height - (44+2*i));
+        if(i===0 || i === 1){
+          contextRef.current.fillStyle = textParam.threeDColor;
+        }else{
+          contextRef.current.fillStyle = textParam.textColor;
+        }
+      }
     }
     else if(clearAll===true){
       setWholedata([]);
@@ -316,28 +296,14 @@ export default function Canvas() {
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
-      fillTexts(
-        randomQuoteName + " " + singleQ,
-        start + 6,
-        starth + 6);
-
-      contextRef.current.fillStyle = textParam.threeDColor;
-      fillTexts(
-        randomQuoteName + " " + singleQ,
-        start + 4,
-        starth + 4);
-
-      fillTexts(
-        randomQuoteName + " " + singleQ,
-        start + 2,
-        starth + 2);
-
-      contextRef.current.fillStyle = textParam.textColor;
-      fillTexts(
-        randomQuoteName + " " + singleQ,
-        start,
-        starth);
-
+      for(var i=0;i<4;i++){
+        fillTexts(randomQuoteName + " " + singleQ, start + (6-2*i), starth + (6-2*i))
+        if (i === 0 || i === 1){
+          contextRef.current.fillStyle = textParam.threeDColor;
+        } else {
+          contextRef.current.fillStyle = textParam.textColor;
+        }
+      }
       var image = canvasRef.current.toDataURL("image/jpg");
       setMyImage(image);
     }
@@ -347,7 +313,6 @@ export default function Canvas() {
     contextRef.current.shadowBlur = 0;
     contextRef.current.lineWidth = 10;
     if (wholedata && wholedata[0] && wholedata[0].movT.length) {
-      //if(wholedata[0]){
         var z;
         for (z = 0; z < wholedata.length; z++) {
           contextRef.current.lineWidth = wholedata[z].movT[0][3];
@@ -369,7 +334,6 @@ export default function Canvas() {
           }
           contextRef.current.stroke();
         }
-      //}
     }  
   }
 
