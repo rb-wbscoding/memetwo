@@ -27,7 +27,6 @@ export default function Canvas() {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvassize, setCanvasSize] = useState({ width: 800, height: 800 });
-
   const [picturedata, setPicturedata] = useState();
   const [lined, setLined] = useState([]);
   const [wholedata, setWholedata] = useState([]);
@@ -35,6 +34,7 @@ export default function Canvas() {
   const [singleQ, setSingleQ] = useState("");
   const [mouseTouch, setMouseTouch] = useState(true);
   const [imgIcon, setImgIcon] = useState();
+  const [iconPos, setIconPos] = useState([])
 
   //set up canvas and reference
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Canvas() {
       setWholedata([]);
 
       img.addEventListener('load', () => {
-         contextRef.current.drawImage(
+        contextRef.current.drawImage(
           img,
           0,
           0,
@@ -69,17 +69,13 @@ export default function Canvas() {
         setMyImage(image);  
       });
     }
-   
-    //setClearAll(false)
   }, [picID, picdatanew]);
-   //console.log(clearAll)
 
   // draw, set a starting point and an end point
   // need to creat data structure for icons just like drawing
   const startDrawing = ({ nativeEvent }) => {
     
     if (tabIndex===3){
-      
     contextRef.current.strokeStyle = grafitiParam.Color;
     contextRef.current.lineWidth = grafitiParam.Width;
     contextRef.current.shadowBlur = 0;
@@ -92,13 +88,11 @@ export default function Canvas() {
     setLined([]);
 
       if (mouseTouch) {
-      
         const { offsetX, offsetY } = nativeEvent;
         const xy = [offsetX, offsetY, LineColor, LineWidth];
-          contextRef.current.moveTo(xy[0], xy[1]);
+        contextRef.current.moveTo(xy[0], xy[1]);
       setStartpos((previous) => [...previous, xy]);
       } else {
-      
         const nn = nativeEvent.targetTouches[0];
         const xy = [
           nn.pageX - nn.target.offsetLeft,
@@ -126,13 +120,11 @@ export default function Canvas() {
   // folow the cursor and draw
   let zz=0
   const draw = ({ nativeEvent }) => {
-    if (!isDrawing) {
-      return;
-    }
+    if (!isDrawing) return;
     var z = 1
     if (window.innerWidth<canvassize.Width){
       z=canvassize.Width/window.innerWidth
-    }else(z=1)
+    }
     //console.log(tabIndex)
     if (tabIndex===3){
      
@@ -179,53 +171,35 @@ export default function Canvas() {
   //function generater(){
   useEffect(() => {
     if (textInput.toptext.length !== 0 || textInput.bottomtext.length !== 0) {
-      contextRef.current.font =
-        "bold " + textParam.fontSize + "px " + textParam.font;
-      const longtop = Math.floor(
-        contextRef.current.measureText(textInput.toptext).width
-      );
-      const starttop = canvassize.width / 2 - longtop / 2;
-      const longbottom = Math.floor(
-        contextRef.current.measureText(textInput.bottomtext).width
-      );
-      const startbottom = canvassize.width / 2 - longbottom / 2;
-
-      contextRef.current.clearRect(
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height
-      );
-      contextRef.current.drawImage(picturedata, 0, 0);
-
-      if(clearAll===false){
-      drawagainline();
-      contextRef.current.shadowColor = textParam.blurColor;
-      contextRef.current.shadowBlur = textParam.blurWidth;
-      contextRef.current.fillStyle = "black";
-      for (var i =0;i<4;i++){
-        fillTexts(textInput.toptext, starttop + (6-2*i), 50 + (6-2*i));
-        fillTexts(textInput.bottomtext, startbottom + (6-2*i), canvassize.height - (44+2*i));
-        if(i===0 || i === 1){
-          contextRef.current.fillStyle = textParam.threeDColor;
-        }else{
-          contextRef.current.fillStyle = textParam.textColor;
-        }
-      }
+      drawText(textInput.toptext, textInput.bottomtext)
     }
-    else if(clearAll===true){
-      setWholedata([]);
-      setStartpos([]);
-      setLined([]);
-      setTextInput({ toptext: "", bottomtext: "" })
-    }
-  }
-    var image = canvasRef.current.toDataURL("image/jpg");
-    setMyImage(image);
-  }, [textInput, textParam, clearAll]);
+  }, [textInput, textParam]);
 
-  function fillTexts(e, f, g){
-    contextRef.current.fillText(e,f,g,canvassize.width - 30);
+  useEffect(() => {
+    if(!clearAll) return
+    setWholedata([]);
+    setStartpos([]);
+    setLined([]);
+    setTextInput({ toptext: "", bottomtext: "" })
+    setSingleQ("")
+    clear()
+  }, [clearAll])
+
+  useEffect(()=>{
+    if(!clearLast) return
+    if(tabIndex === 3){
+      clear()
+      setWholedata(wholedata.filter((_, i) => i !== wholedata.length - 1), drawagainline())
+    }else if(tabIndex === 4){
+      
+    } 
+  }, [clearLast])
+
+  function fillTexts(e, f, g) {contextRef.current.fillText(e,f,g,canvassize.width - 30)}
+
+  function clear(){
+    contextRef.current.clearRect(0,0,canvasRef.current.width,canvasRef.current.height);
+    contextRef.current.drawImage(picturedata, 0, 0);
   }
 
   //generate the random text
@@ -246,7 +220,6 @@ export default function Canvas() {
       if (long < canvassize.width) {
         setSingleQ(singleq);
         drawforrandom(singleq);
-        //setPers(false)
         setTextInput({ toptext: "", bottomtext: "" });
       } else {
         retry();
@@ -265,84 +238,67 @@ export default function Canvas() {
 
   // put the generated text on the canvas
   function drawforrandom(singleq) {
-    //console.log("a"+singleQ, "b"+randomQuoteName)
-    if (picturedata !==undefined){
-      contextRef.current.clearRect(
-        0,
-        0,
-        canvasRef.current.width,
-        canvasRef.current.height
-      );
-      contextRef.current.drawImage(picturedata, 0, 0);
-    }
-    drawagainline();
+    //if (picturedata !==undefined) clear()
+    //drawagainline();
     if (picturedata !== undefined && singleQ !== "" && randomQuoteName !== "") {
-      contextRef.current.font =
-        "bold " + textParam.fontSize + "px " + textParam.font;
       const message = randomQuoteName + " " + singleq;
-      const long = Math.floor(contextRef.current.measureText(message).width);
-      const start = canvassize.width / 2 - long / 2;
-      const starth = 50;
-      //contextRef.current.clearRect(
-       // 0,
-       // 0,
-       // canvasRef.current.width,
-       // canvasRef.current.height
-      //);
-      //contextRef.current.drawImage(picturedata, 0, 0);
+      drawText(message, )
+    }
+  }
 
-      //drawagainline();
-    
+  function drawText(topText, bottomText){
+      contextRef.current.font = "bold " + textParam.fontSize + "px " + textParam.font;
+      if(topText){
+      const longtop = Math.floor(contextRef.current.measureText(topText).width);
+      var starttop = canvassize.width / 2 - longtop / 2;}
+      if(bottomText){
+      const longbottom = Math.floor(contextRef.current.measureText(bottomText).width);
+      var startbottom = canvassize.width / 2 - longbottom / 2;}
+      clear()
+      drawagainline();
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
-      for(var i=0;i<4;i++){
-        fillTexts(randomQuoteName + " " + singleQ, start + (6-2*i), starth + (6-2*i))
-        if (i === 0 || i === 1){
+      for (var i =0;i<4;i++){
+        if(topText){
+        fillTexts(topText, starttop + (6-2*i), 50 + (6-2*i));}
+        if(bottomText){
+        fillTexts(bottomText, startbottom + (6-2*i), canvassize.height - (44+2*i));}
+        if(i===0 || i === 1){
           contextRef.current.fillStyle = textParam.threeDColor;
-        } else {
+        }else{
           contextRef.current.fillStyle = textParam.textColor;
         }
       }
-      var image = canvasRef.current.toDataURL("image/jpg");
-      setMyImage(image);
-    }
+    var image = canvasRef.current.toDataURL("image/jpg");
+    setMyImage(image);
   }
 
   function drawagainline() {
     contextRef.current.shadowBlur = 0;
     contextRef.current.lineWidth = 10;
     if (wholedata && wholedata[0] && wholedata[0].movT.length) {
-        var z;
-        for (z = 0; z < wholedata.length; z++) {
+        for (var z = 0; z < wholedata.length; z++) {
           contextRef.current.lineWidth = wholedata[z].movT[0][3];
           contextRef.current.strokeStyle = wholedata[z].movT[0][2];
           contextRef.current.lineCap = "round";
           contextRef.current.beginPath();
-
-          var i;
-          contextRef.current.moveTo(
-            wholedata[z].movT[0][0],
-            wholedata[z].movT[0][1]
-          );
-
-          for (i = 0; i < wholedata[z].lineT.length; i++) {
-            contextRef.current.lineTo(
-              wholedata[z].lineT[i].offsetX,
-              wholedata[z].lineT[i].offsetY
-            );
+          contextRef.current.moveTo(wholedata[z].movT[0][0],wholedata[z].movT[0][1]);
+          for (var i = 0; i < wholedata[z].lineT.length; i++) {
+            contextRef.current.lineTo(wholedata[z].lineT[i].offsetX,wholedata[z].lineT[i].offsetY);
           }
           contextRef.current.stroke();
         }
     }  
   }
 
+  function drawagainIcon(){
+
+  }
+
   //Mouse or touch control
   function mouseTT(e, zz, nn){
       nn?startDrawing(e):finishDrawing(e)
-      //if(nn){      
-        //startDrawing(e)}
-      //else{finishDrawing(e)};
       document.getElementsByTagName("body")[0].style = "overflow: visible";
       setMouseTouch(zz);
   }
