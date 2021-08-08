@@ -76,7 +76,7 @@ function HideAndShowDivOnClick() {
       <a download="meme.jpg" href={myImage}>
         <button className={Styles.downloadBtn}>Download</button>
       </a>
-      <button className={Styles.downloadBtn} onClick={setClearLast(true)}>Clear Last</button>
+      <button className={Styles.downloadBtn} onClick={()=>{setClearLast(true); setTimeout(()=>{setClearLast(false)},100)}}>Clear Last</button>
       <button className={Styles.downloadBtn} onClick={()=>{setClearAll(true); setTimeout(()=>{setClearAll(false)}, 100)}}>Clear All</button>
 
       {showDiv && (
