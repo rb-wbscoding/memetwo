@@ -31,7 +31,6 @@ export default function Canvas() {
   const [lined, setLined] = useState([]);
   const [wholedata, setWholedata] = useState([]);
   const [startpos, setStartpos] = useState([]);
-  const [singleQ, setSingleQ] = useState("");
   const [mouseTouch, setMouseTouch] = useState(true);
   const [imgIcon, setImgIcon] = useState();
   const [iconPos, setIconPos] = useState([])
@@ -39,8 +38,7 @@ export default function Canvas() {
   //set up canvas and reference
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-    contextRef.current = context;
+    contextRef.current = canvas.getContext("2d");
     contextRef.current.font = "bold 20px Roman";
   }, []);
 
@@ -56,14 +54,16 @@ export default function Canvas() {
       });
       setPicturedata(img);
       setWholedata([]);
+      setTextInput({ toptext: "", bottomtext: "" })
 
       img.addEventListener('load', () => {
+        //clear()
         contextRef.current.drawImage(
           img,
           0,
           0,
-          picdatanew[picID].webformatWidth,
-          picdatanew[picID].webformatHeight
+         picdatanew[picID].webformatWidth,
+         picdatanew[picID].webformatHeight
         );
         var image = canvasRef.current.toDataURL("image/jpg");
         setMyImage(image);  
@@ -152,7 +152,7 @@ export default function Canvas() {
       const { offsetX, offsetY } = nativeEvent;
       if(zz%5===0){
         //if(randomQuoteName){
-        drawforrandom();
+        drawText();
         //}        
         contextRef.current.drawImage(imgIcon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
       }
@@ -168,28 +168,19 @@ export default function Canvas() {
     setMyImage(image);
   };
 
-  //function generater(){
-  useEffect(() => {
-    if (textInput.toptext.length !== 0 || textInput.bottomtext.length !== 0) {
-      drawText(textInput.toptext, textInput.bottomtext)
-    }
-  }, [textInput, textParam]);
-
   useEffect(() => {
     if(!clearAll) return
     setWholedata([]);
     setStartpos([]);
     setLined([]);
     setTextInput({ toptext: "", bottomtext: "" })
-    setSingleQ("")
     clear()
   }, [clearAll])
 
   useEffect(()=>{
     if(!clearLast) return
     if(tabIndex === 3){
-      clear()
-      setWholedata(wholedata.filter((_, i) => i !== wholedata.length - 1), drawagainline())
+      setWholedata(wholedata.filter((_, i) => i !== wholedata.length - 1))
     }else if(tabIndex === 4){
       
     } 
@@ -198,6 +189,7 @@ export default function Canvas() {
   function fillTexts(e, f, g) {contextRef.current.fillText(e,f,g,canvassize.width - 30)}
 
   function clear(){
+    if (picturedata === undefined) return
     contextRef.current.clearRect(0,0,canvasRef.current.width,canvasRef.current.height);
     contextRef.current.drawImage(picturedata, 0, 0);
   }
@@ -214,45 +206,23 @@ export default function Canvas() {
       contextRef.current.font = "bold 50px " + textParam.font;
       const message = randomQuoteName + " " + singleq;
       const long = Math.floor(contextRef.current.measureText(message).width);
-      contextRef.current.font =
-        "bold " + textParam.fontSize + "px " + textParam.font;
 
-      if (long < canvassize.width) {
-        setSingleQ(singleq);
-        drawforrandom(singleq);
-        setTextInput({ toptext: "", bottomtext: "" });
-      } else {
-        retry();
-      }
+      if (long < canvassize.width) setTextInput({ toptext: message, bottomtext: "" });
+      else retry();
     }
   }, [pers]);
 
   // allow text modification of the random quote
-  useEffect(() => {
-    if (textInput.toptext.length === 0 && textInput.bottomtext.length === 0) {
-      contextRef.current.font =
-        "bold " + textParam.fontSize + "px " + textParam.font;
-      drawforrandom(singleQ);
-    }
-  }, [textInput, textParam]);
+  useEffect(() => drawText(), [textInput, textParam, wholedata]);
 
-  // put the generated text on the canvas
-  function drawforrandom(singleq) {
-    //if (picturedata !==undefined) clear()
-    //drawagainline();
-    if (picturedata !== undefined && singleQ !== "" && randomQuoteName !== "") {
-      const message = randomQuoteName + " " + singleq;
-      drawText(message, )
-    }
-  }
-
-  function drawText(topText, bottomText){
+  function drawText(){
+      if (picturedata === undefined) return
       contextRef.current.font = "bold " + textParam.fontSize + "px " + textParam.font;
-      if(topText){
-      const longtop = Math.floor(contextRef.current.measureText(topText).width);
+      if(textInput.toptext){
+      const longtop = Math.floor(contextRef.current.measureText(textInput.toptext).width);
       var starttop = canvassize.width / 2 - longtop / 2;}
-      if(bottomText){
-      const longbottom = Math.floor(contextRef.current.measureText(bottomText).width);
+      if(textInput.bottomtext){
+      const longbottom = Math.floor(contextRef.current.measureText(textInput.bottomtext).width);
       var startbottom = canvassize.width / 2 - longbottom / 2;}
       clear()
       drawagainline();
@@ -260,15 +230,12 @@ export default function Canvas() {
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
       for (var i =0;i<4;i++){
-        if(topText){
-        fillTexts(topText, starttop + (6-2*i), 50 + (6-2*i));}
-        if(bottomText){
-        fillTexts(bottomText, startbottom + (6-2*i), canvassize.height - (44+2*i));}
-        if(i===0 || i === 1){
-          contextRef.current.fillStyle = textParam.threeDColor;
-        }else{
-          contextRef.current.fillStyle = textParam.textColor;
-        }
+        if(textInput.toptext){
+        fillTexts(textInput.toptext, starttop + (6-2*i), 50 + (6-2*i));}
+        if(textInput.bottomtext){
+        fillTexts(textInput.bottomtext, startbottom + (6-2*i), canvassize.height - (44+2*i));}
+        if(i===0 || i === 1) contextRef.current.fillStyle = textParam.threeDColor;
+        else contextRef.current.fillStyle = textParam.textColor;
       }
     var image = canvasRef.current.toDataURL("image/jpg");
     setMyImage(image);
