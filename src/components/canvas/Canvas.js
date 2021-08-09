@@ -21,7 +21,8 @@ export default function Canvas() {
     setClearAll,
     clearAll,
     setClearLast,
-    clearLast
+    clearLast, 
+    toCopy
   } = useContext(StateContext);
   const contextRef = useRef(null);
   const canvasRef = useRef(null);
@@ -48,16 +49,12 @@ export default function Canvas() {
     if (picdatanew.length) {
       img.setAttribute("crossorigin", "anonymous");
       img.src = picdatanew[picID].webformatURL;
-      setCanvasSize({
-        width: picdatanew[picID].webformatWidth,
-        height: picdatanew[picID].webformatHeight,
-      });
+      setCanvasSize({width: picdatanew[picID].webformatWidth, height: picdatanew[picID].webformatHeight});
       setPicturedata(img);
       setWholedata([]);
       setTextInput({ toptext: "", bottomtext: "" })
 
       img.addEventListener('load', () => {
-        //clear()
         contextRef.current.drawImage(
           img,
           0,
@@ -74,24 +71,23 @@ export default function Canvas() {
   // draw, set a starting point and an end point
   // need to creat data structure for icons just like drawing
   const startDrawing = ({ nativeEvent }) => {
-    
     if (tabIndex===3){
-    contextRef.current.strokeStyle = grafitiParam.Color;
-    contextRef.current.lineWidth = grafitiParam.Width;
-    contextRef.current.shadowBlur = 0;
-    contextRef.current.lineCap = "round";
-    contextRef.current.beginPath();
-    const LineColor = grafitiParam.Color;
-    const LineWidth = grafitiParam.Width;
-    setIsDrawing(true);
-    setStartpos([]);
-    setLined([]);
+      contextRef.current.strokeStyle = grafitiParam.Color;
+      contextRef.current.lineWidth = grafitiParam.Width;
+      contextRef.current.shadowBlur = 0;
+      contextRef.current.lineCap = "round";
+      contextRef.current.beginPath();
+      const LineColor = grafitiParam.Color;
+      const LineWidth = grafitiParam.Width;
+      setIsDrawing(true);
+      setStartpos([]);
+      setLined([]);
 
       if (mouseTouch) {
         const { offsetX, offsetY } = nativeEvent;
         const xy = [offsetX, offsetY, LineColor, LineWidth];
         contextRef.current.moveTo(xy[0], xy[1]);
-      setStartpos((previous) => [...previous, xy]);
+        setStartpos((previous) => [...previous, xy]);
       } else {
         const nn = nativeEvent.targetTouches[0];
         const xy = [
@@ -149,20 +145,21 @@ export default function Canvas() {
     else if(tabIndex===0||tabIndex===1||tabIndex===2) {}
     else {
       zz=zz+1
-      const { offsetX, offsetY } = nativeEvent;
       if(zz%5===0){
-        //if(randomQuoteName){
-        drawText();
-        //}        
+        reDraw()   
         contextRef.current.drawImage(imgIcon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
       }
     }
   };
 
   //finish the drawing process and construct the data Array
-  const finishDrawing = () => {
+  const finishDrawing = ({nativeEvent}) => {
+    if (tabIndex===4){
+      const posAll = [imgIcon, nativeEvent.offsetX, nativeEvent.offsetY]
+      setIconPos((gI)=>[...gI, posAll]);
+    } else if (tabIndex===3){
     const newStartStop = { movT: startpos, lineT: lined };
-    setWholedata((ln) => [...ln, newStartStop]);
+    setWholedata((ln) => [...ln, newStartStop]);}
     setIsDrawing(false);
     var image = canvasRef.current.toDataURL("image/jpg");
     setMyImage(image);
@@ -173,6 +170,7 @@ export default function Canvas() {
     setWholedata([]);
     setStartpos([]);
     setLined([]);
+    setIconPos([])
     setTextInput({ toptext: "", bottomtext: "" })
     clear()
   }, [clearAll])
@@ -181,8 +179,8 @@ export default function Canvas() {
     if(!clearLast) return
     if(tabIndex === 3){
       setWholedata(wholedata.filter((_, i) => i !== wholedata.length - 1))
-    }else if(tabIndex === 4){
-      
+    } else if (tabIndex === 4){
+      setIconPos(iconPos.filter((_, i) => i !== iconPos.length - 1))
     } 
   }, [clearLast])
 
@@ -197,7 +195,6 @@ export default function Canvas() {
   //generate the random text
   useEffect(() => {
     Object.keys(quotenew).length&&retry()
-
     function retry() {
       const lengt = quotenew.messages.personalized.length;
       const randomnum = Math.floor(Math.random() * lengt - 1);
@@ -212,11 +209,26 @@ export default function Canvas() {
     }
   }, [pers]);
 
+  useEffect(()=>{
+      canvasRef.current.toBlob(function(blob){
+        //window.alert('Hello I copied')
+        //let newClip = new ClipboardItem({"image/png": blob})
+        //navigator.clipboard.write([newClip]).then(result=>console.log("failed", result))
+       }) 
+  }, [toCopy])
+
   // allow text modification of the random quote
-  useEffect(() => drawText(), [textInput, textParam, wholedata]);
+  useEffect(() => reDraw(), [textInput, textParam, wholedata, iconPos]);
+
+  function reDraw(){
+    if (picturedata === undefined) return
+    clear()
+    drawagainline();
+    drawagainIcon()
+    drawText()
+  }
 
   function drawText(){
-      if (picturedata === undefined) return
       contextRef.current.font = "bold " + textParam.fontSize + "px " + textParam.font;
       if(textInput.toptext){
       const longtop = Math.floor(contextRef.current.measureText(textInput.toptext).width);
@@ -224,8 +236,7 @@ export default function Canvas() {
       if(textInput.bottomtext){
       const longbottom = Math.floor(contextRef.current.measureText(textInput.bottomtext).width);
       var startbottom = canvassize.width / 2 - longbottom / 2;}
-      clear()
-      drawagainline();
+
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";
@@ -260,7 +271,10 @@ export default function Canvas() {
   }
 
   function drawagainIcon(){
-
+    if (iconPos.length === 0) return
+    for (var i = 0; i < iconPos.length; i++) {
+      contextRef.current.drawImage(iconPos[i][0], iconPos[i][1]-40, iconPos[i][2]-40, 80, 80);
+    }
   }
 
   //Mouse or touch control
