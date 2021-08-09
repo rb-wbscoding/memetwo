@@ -28,6 +28,7 @@ export default function StateContextProvider({ children }) {
   const [iconID, setIconID]=useState(0);
   const [clearAll, setClearAll]=useState(false)
   const [clearLast, setClearLast]= useState(false)
+  const [toCopy, setToCopy] = useState(false)
 
  //Get icons
  useEffect(() => {
@@ -94,7 +95,9 @@ export default function StateContextProvider({ children }) {
         setClearAll,
         clearAll,
         setClearLast,
-        clearLast
+        clearLast,
+        setToCopy,
+        toCopy
       }}
     >
       {children}

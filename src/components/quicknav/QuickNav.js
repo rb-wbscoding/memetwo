@@ -13,11 +13,13 @@ function HideAndShowDivOnClick() {
     textParam,
     setTextParam,
     myImage,
+    tabIndex,
     setTabIndex,
     icons, 
     setIconID,
     setClearAll,
-    setClearLast
+    setClearLast,
+    setToCopy
   } = useContext(StateContext);
   const [showDiv, setShowDiv] = useState(false);
   const [chips, setChips] = useState();
@@ -61,22 +63,17 @@ function HideAndShowDivOnClick() {
             <img key={i} id={i} onClick={IconID} onTouchStart={IconID} type="image" src={v.previewURL} alt="choose donald" className={Styles.quicklistPic}/>
       ))) }}, [icons])
 
-
-
-
   return (
     <div className={Styles.quicklistContainer}>
-      <button
-        className={Styles.quicklistBtn}
-        onClick={() => setShowDiv(!showDiv)}
-      >
+      <button className={Styles.quicklistBtn} onClick={() => setShowDiv(!showDiv)}>
         {showDiv ? "Hide" : "Customize"}
       </button>
 
       <a download="meme.jpg" href={myImage}>
         <button className={Styles.downloadBtn}>Download</button>
       </a>
-      <button className={Styles.downloadBtn} onClick={()=>{setClearLast(true); setTimeout(()=>{setClearLast(false)},100)}}>Clear Last</button>
+      <button className={Styles.downloadBtn} onClick={()=>{setToCopy(true); setTimeout(()=>{setToCopy(false)}, 100)}}>Copy</button>
+      {(tabIndex === 3 || tabIndex === 4)?<button className={Styles.downloadBtn} onClick={()=>{setClearLast(true); setTimeout(()=>{setClearLast(false)},100)}}>Clear Last</button>:""}
       <button className={Styles.downloadBtn} onClick={()=>{setClearAll(true); setTimeout(()=>{setClearAll(false)}, 100)}}>Clear All</button>
 
       {showDiv && (
