@@ -12,15 +12,12 @@ export default function Canvas() {
     textInput,
     setTextInput,
     pers,
-    setPers,
     randomQuoteName,
     setMyImage,
     icons, 
     iconID,
     tabIndex,
-    setClearAll,
     clearAll,
-    setClearLast,
     clearLast, 
     toCopy
   } = useContext(StateContext);
@@ -53,7 +50,7 @@ export default function Canvas() {
       setPicturedata(img);
       setWholedata([]);
       setTextInput({ toptext: "", bottomtext: "" })
-
+      setIconPos([])
       img.addEventListener('load', () => {
         contextRef.current.drawImage(
           img,
@@ -82,10 +79,8 @@ export default function Canvas() {
       setIsDrawing(true);
       setStartpos([]);
       setLined([]);
-
       if (mouseTouch) {
-        const { offsetX, offsetY } = nativeEvent;
-        const xy = [offsetX, offsetY, LineColor, LineWidth];
+        const xy = [nativeEvent.offsetX, nativeEvent.offsetY, LineColor, LineWidth];
         contextRef.current.moveTo(xy[0], xy[1]);
         setStartpos((previous) => [...previous, xy]);
       } else {
@@ -101,8 +96,7 @@ export default function Canvas() {
     }} else if(tabIndex===0||tabIndex===1||tabIndex===2) {}
     else {
       const imgicon = new Image(); // Create new img element
-      setIsDrawing(true);
-      
+      setIsDrawing(true); 
       if(picdatanew.length){
         imgicon.crossOrigin="anonymous";
         imgicon.src = iconID;
@@ -118,12 +112,8 @@ export default function Canvas() {
   const draw = ({ nativeEvent }) => {
     if (!isDrawing) return;
     var z = 1
-    if (window.innerWidth<canvassize.Width){
-      z=canvassize.Width/window.innerWidth
-    }
-    //console.log(tabIndex)
+    if (window.innerWidth<canvassize.Width) z=canvassize.Width/window.innerWidth
     if (tabIndex===3){
-     
       if (mouseTouch) {
         const { offsetX, offsetY } = nativeEvent;
         contextRef.current.lineTo(offsetX, offsetY);
@@ -177,20 +167,9 @@ export default function Canvas() {
 
   useEffect(()=>{
     if(!clearLast) return
-    if(tabIndex === 3){
-      setWholedata(wholedata.filter((_, i) => i !== wholedata.length - 1))
-    } else if (tabIndex === 4){
-      setIconPos(iconPos.filter((_, i) => i !== iconPos.length - 1))
-    } 
+    if(tabIndex === 3) setWholedata(wholedata.filter((_, i) => i !== wholedata.length - 1))
+    else if (tabIndex === 4) setIconPos(iconPos.filter((_, i) => i !== iconPos.length - 1))
   }, [clearLast])
-
-  function fillTexts(e, f, g) {contextRef.current.fillText(e,f,g,canvassize.width - 30)}
-
-  function clear(){
-    if (picturedata === undefined) return
-    contextRef.current.clearRect(0,0,canvasRef.current.width,canvasRef.current.height);
-    contextRef.current.drawImage(picturedata, 0, 0);
-  }
 
   //generate the random text
   useEffect(() => {
@@ -199,11 +178,9 @@ export default function Canvas() {
       const lengt = quotenew.messages.personalized.length;
       const randomnum = Math.floor(Math.random() * lengt - 1);
       const singleq = quotenew.messages.personalized[randomnum];
-
       contextRef.current.font = "bold 50px " + textParam.font;
       const message = randomQuoteName + " " + singleq;
       const long = Math.floor(contextRef.current.measureText(message).width);
-
       if (long < canvassize.width) setTextInput({ toptext: message, bottomtext: "" });
       else retry();
     }
@@ -211,14 +188,23 @@ export default function Canvas() {
 
   useEffect(()=>{
       canvasRef.current.toBlob(function(blob){
+        //document.execCommand("copy");
         //window.alert('Hello I copied')
-        //let newClip = new ClipboardItem({"image/png": blob})
-        //navigator.clipboard.write([newClip]).then(result=>console.log("failed", result))
+        //let newClip = [new ClipboardItem({"image/png": blob})]
+        //navigator.clipboard.write(newClip).then(result=>console.log("failed", result))
        }) 
   }, [toCopy])
 
   // allow text modification of the random quote
   useEffect(() => reDraw(), [textInput, textParam, wholedata, iconPos]);
+
+  function fillTexts(e, f, g) {contextRef.current.fillText(e,f,g,canvassize.width - 30)}
+
+  function clear(){
+    if (picturedata === undefined) return
+    contextRef.current.clearRect(0,0,canvasRef.current.width,canvasRef.current.height);
+    contextRef.current.drawImage(picturedata, 0, 0);
+  }
 
   function reDraw(){
     if (picturedata === undefined) return
@@ -236,7 +222,6 @@ export default function Canvas() {
       if(textInput.bottomtext){
       const longbottom = Math.floor(contextRef.current.measureText(textInput.bottomtext).width);
       var startbottom = canvassize.width / 2 - longbottom / 2;}
-
       contextRef.current.shadowColor = textParam.blurColor;
       contextRef.current.shadowBlur = textParam.blurWidth;
       contextRef.current.fillStyle = "black";

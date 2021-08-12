@@ -72,7 +72,8 @@ function HideAndShowDivOnClick() {
       <a download="meme.jpg" href={myImage}>
         <button className={Styles.downloadBtn}>Download</button>
       </a>
-      <button className={Styles.downloadBtn} onClick={()=>{setToCopy(true); setTimeout(()=>{setToCopy(false)}, 100)}}>Copy</button>
+      {//<button className={Styles.downloadBtn} onClick={()=>{setToCopy(true); setTimeout(()=>{setToCopy(false)}, 100)}}>Copy</button> 
+      }
       {(tabIndex === 3 || tabIndex === 4)?<button className={Styles.downloadBtn} onClick={()=>{setClearLast(true); setTimeout(()=>{setClearLast(false)},100)}}>Clear Last</button>:""}
       <button className={Styles.downloadBtn} onClick={()=>{setClearAll(true); setTimeout(()=>{setClearAll(false)}, 100)}}>Clear All</button>
 
@@ -157,9 +158,10 @@ function HideAndShowDivOnClick() {
           <TabPanel>
             <div className={Styles.fontContainer}>
                 {availablefonts.map((ent, idq)=>
-                <p key={idq} className={Styles.wrapper1}             
+                <p key={idq}         
                     onClick={() =>setTextParam({ ...textParam, font: ent[0] })}
                     className={ent[1]}
+                    style={{margin: 5}}
                     >{ent[0]}
                 </p>)}
             </div>
@@ -193,10 +195,23 @@ function HideAndShowDivOnClick() {
             </div>
           </TabPanel>
           <TabPanel>
+              <div className={Styles.boxes}>
+                <input
+                  type="range"
+                  className={Styles.inputs}
+                  value={grafitiParam.Width}
+                  onChange={(e) =>
+                    setGrafitiParam({ ...grafitiParam, Width: e.target.value })
+                  }
+                  min="1"
+                  max="40"
+                />
+                <label>ICON SIZE: {grafitiParam.Width}</label>
+              
+              </div>
               <ul className="quicklist-content">
                  {fish}    
-                </ul>
-
+              </ul>
           </TabPanel>
         </Tabs>
       )}

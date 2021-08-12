@@ -41,17 +41,26 @@ p {
 .App.dark {
   background-color: #363940;
   color: rgb(163, 158, 158);
-  height: 110vh;
+  height: 100%;
+  width: 100%;
 }
 
 /* Light Mode */
 
 .App.light {
   background-color: #fff;
-  height: 100vh;
+  height: 100%;
 }
 
 .flex-body-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  align-items: center;
+}
+
+.flex-quicknav-container {
   display: flex;
   justify-content: center;
   flex-direction: row;
@@ -68,32 +77,13 @@ p {
   margin: auto;
 }
 
-@media screen and (max-width: 1300px) {
-  .App.dark {
-    height: 150vh;
-  }
-}
-
 @media screen and (max-width: 1000px) {
   .flex-body-container {
     flex-direction: column;
   }
-  .App.dark {
-    height: 220vh;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .App.dark {
-    height: 240vh;
-  }
 }
 
 @media screen and (max-width: 400px) {
-  .App.dark {
-    height: 350vh;
-  }
-
   p {
     font-family: "PatuaOne-Regular";
     text-align: center;

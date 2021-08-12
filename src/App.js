@@ -21,7 +21,9 @@ function App() {
         <Form className="flex-wrapper-left" />
         <Canvas className="flex-wrapper-right" />
       </div>
-      <QuickNav />
+      <div className="flex-quicknav-container">
+        <QuickNav />
+      </div>
       <div className="yellowBanner">
         <p>
           Share your memes on{" "}
