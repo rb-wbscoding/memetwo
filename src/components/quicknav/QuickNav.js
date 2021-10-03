@@ -195,7 +195,7 @@ function HideAndShowDivOnClick() {
             </div>
           </TabPanel>
           <TabPanel>
-              <div className={Styles.boxes}>
+              {/*<div className={Styles.boxes}>
                 <input
                   type="range"
                   className={Styles.inputs}
@@ -208,7 +208,7 @@ function HideAndShowDivOnClick() {
                 />
                 <label>ICON SIZE: {grafitiParam.Width}</label>
               
-              </div>
+                </div>*/}
               <ul className="quicklist-content">
                  {fish}    
               </ul>

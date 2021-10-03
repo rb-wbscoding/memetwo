@@ -32,6 +32,9 @@ export default function Canvas() {
   const [mouseTouch, setMouseTouch] = useState(true);
   const [imgIcon, setImgIcon] = useState();
   const [iconPos, setIconPos] = useState([])
+  const [zoomIcon, setZoomIcon] = useState(true)
+  const [newInt, setNewInt] = useState()
+  const [magIcon, setMagIcon] = useState()
 
   //set up canvas and reference
   useEffect(() => {
@@ -68,6 +71,7 @@ export default function Canvas() {
   // draw, set a starting point and an end point
   // need to creat data structure for icons just like drawing
   const startDrawing = ({ nativeEvent }) => {
+    console.log(nativeEvent.timeStamp)
     if (tabIndex===3){
       contextRef.current.strokeStyle = grafitiParam.Color;
       contextRef.current.lineWidth = grafitiParam.Width;
@@ -101,8 +105,28 @@ export default function Canvas() {
         imgicon.crossOrigin="anonymous";
         imgicon.src = iconID;
         setImgIcon(imgicon)
-        imgicon.addEventListener('load', () => {    
-          contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
+        imgicon.addEventListener('load', () => {   
+          let x = 1
+          //setZoom(true)
+          //dogy()
+          //function dogy(){
+          //while(x<3){
+          //const x = 1
+          console.log(zoomIcon+"fist")
+          let delay = setInterval(()=>{
+            contextRef.current.drawImage(imgicon, nativeEvent.offsetX-40*x, nativeEvent.offsetY-40*x, 80*x, 80*x)
+            x+=0.1
+            setMagIcon(x)
+            if(x>3){ 
+              //setIcon
+              clearInterval(delay)}
+          }, 300)
+          setNewInt(delay)
+          ;
+          //setInterval(()=>{
+          
+          //}
+          //}
         });
       }}
   };
@@ -136,7 +160,7 @@ export default function Canvas() {
     else {
       zz=zz+1
       if(zz%5===0){
-        reDraw()   
+        reDraw()
         contextRef.current.drawImage(imgIcon, nativeEvent.offsetX-40, nativeEvent.offsetY-40, 80, 80);
       }
     }
@@ -145,8 +169,11 @@ export default function Canvas() {
   //finish the drawing process and construct the data Array
   const finishDrawing = ({nativeEvent}) => {
     if (tabIndex===4){
-      const posAll = [imgIcon, nativeEvent.offsetX, nativeEvent.offsetY]
+      const posAll = [imgIcon, nativeEvent.offsetX, nativeEvent.offsetY, magIcon]
       setIconPos((gI)=>[...gI, posAll]);
+      clearInterval(newInt)
+      setNewInt()
+      setMagIcon()
     } else if (tabIndex===3){
     const newStartStop = { movT: startpos, lineT: lined };
     setWholedata((ln) => [...ln, newStartStop]);}
@@ -258,7 +285,8 @@ export default function Canvas() {
   function drawagainIcon(){
     if (iconPos.length === 0) return
     for (var i = 0; i < iconPos.length; i++) {
-      contextRef.current.drawImage(iconPos[i][0], iconPos[i][1]-40, iconPos[i][2]-40, 80, 80);
+      let yy = iconPos[i][3]
+      contextRef.current.drawImage(iconPos[i][0], iconPos[i][1]-40*yy, iconPos[i][2]-40*yy, 80*yy, 80*yy);
     }
   }
 
@@ -273,11 +301,23 @@ export default function Canvas() {
     <div className={Styles.canvasContainer}>
       <canvas
         ref={canvasRef}
-        onMouseDown={(e)=>mouseTT(e, true, true)}
-        onMouseUp={(e)=>mouseTT(e, true, false)}
+        onMouseDown={(e)=>{
+          console.log("down man")
+          setZoomIcon(true)
+          mouseTT(e, true, true)
+        }}
+        onMouseUp={(e)=>
+          {//setZoomIcon(!zoomIcon)
+            mouseTT(e, true, false)
+            console.log("I have fired")
+           // clearInterval(delay)
+           // setZoomIcon(false)
+          }}
         onMouseMove={(e) => {
           draw(e);
           setMouseTouch(true);
+          console.log("move it baby")
+          //setZoom(false)
         }}
         onTouchStart={(e)=>mouseTT(e, false, true)}
         onTouchEnd={(e)=>mouseTT(e, false, false) }
