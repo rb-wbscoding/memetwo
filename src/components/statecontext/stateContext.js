@@ -32,28 +32,21 @@ export default function StateContextProvider({ children }) {
 
  //Get icons
  useEffect(() => {
-  fetch("https://pixabay.com/api/?key=17706064-dbf47c15f3ffee1df9f90dd47&q=emoji&image_type=vector&per_page=200")
-    .then(function (response) {
-      return response.json();
-    })
+  fetch('https://pixabay.com/api/?key=17706064-dbf47c15f3ffee1df9f90dd47&q=emoji&image_type=vector&per_page=200')
+    .then(response => response.json())
     .then(function (rep) {
       const memes = rep.hits;
       setIcons(memes);
     });
 }, []);  
 
-
-  useEffect(() => {
-    fetch(
-      "https://pixabay.com/api/?key=17706064-dbf47c15f3ffee1df9f90dd47&q=donald+trump&image_type=all&per_page=200"
-    )
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (rep) {
-        const memes = rep.hits;
-        setPicdatanew(memes);
-      });
+useEffect(() => {
+  fetch("https://pixabay.com/api/?key=17706064-dbf47c15f3ffee1df9f90dd47&q=donald+trump&image_type=all&per_page=200")
+    .then(response => response.json())
+    .then(function (rep) {
+      const memes = rep.hits;
+      setPicdatanew(memes);
+    });
   }, []);
 
   useEffect(() => {
